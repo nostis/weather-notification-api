@@ -57,5 +57,8 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /var/
-/.idea
 ###< symfony/framework-bundle ###
+
+# Other
+/.idea
+/.php-version
