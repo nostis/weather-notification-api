@@ -36,6 +36,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private string $password;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private string $accountConfirmationToken;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private string $passwordResetToken;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $isConfirmed;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $isEnabled;
+
+    /**
+     * @ORM\OneToOne(targetEntity=UserProfile::class, mappedBy="userRelation", cascade={"persist", "remove"})
+     */
+    private UserProfile $userProfile;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -123,5 +148,70 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getAccountConfirmationToken(): ?string
+    {
+        return $this->accountConfirmationToken;
+    }
+
+    public function setAccountConfirmationToken(string $accountConfirmationToken): self
+    {
+        $this->accountConfirmationToken = $accountConfirmationToken;
+
+        return $this;
+    }
+
+    public function getPasswordResetToken(): ?string
+    {
+        return $this->passwordResetToken;
+    }
+
+    public function setPasswordResetToken(?string $passwordResetToken): self
+    {
+        $this->passwordResetToken = $passwordResetToken;
+
+        return $this;
+    }
+
+    public function getIsConfirmed(): ?bool
+    {
+        return $this->isConfirmed;
+    }
+
+    public function setIsConfirmed(bool $isConfirmed): self
+    {
+        $this->isConfirmed = $isConfirmed;
+
+        return $this;
+    }
+
+    public function getIsEnabled(): ?bool
+    {
+        return $this->isEnabled;
+    }
+
+    public function setIsEnabled(bool $isEnabled): self
+    {
+        $this->isEnabled = $isEnabled;
+
+        return $this;
+    }
+
+    public function getUserProfile(): ?UserProfile
+    {
+        return $this->userProfile;
+    }
+
+    public function setUserProfile(UserProfile $userProfile): self
+    {
+        // set the owning side of the relation if necessary
+        if ($userProfile->getUserRelation() !== $this) {
+            $userProfile->setUserRelation($this);
+        }
+
+        $this->userProfile = $userProfile;
+
+        return $this;
     }
 }
