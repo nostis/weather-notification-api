@@ -2,6 +2,7 @@
 
 namespace App\Service\User;
 
+use App\Dto\User\UserRegisterOutput;
 use App\Entity\User;
 use App\Entity\UserProfile;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
@@ -13,6 +14,15 @@ class UserRegisterService
     public function __construct(PasswordHasherInterface $passwordHasher)
     {
         $this->passwordHasher = $passwordHasher;
+    }
+
+    public function createUserOutputDto(User $user): UserRegisterOutput
+    {
+        $userOutputDto = new UserRegisterOutput();
+        $userOutputDto->email = $user->getEmail();
+        $userOutputDto->name = $user->getUserProfile()->getName();
+
+        return $userOutputDto;
     }
 
     public function createUser(string $email, string $plainPassword, string $name): User
