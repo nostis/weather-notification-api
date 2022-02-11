@@ -9,5 +9,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class UniqueEmail extends Constraint
 {
-    public string $message = 'The email "{{ string }}" have to be unique!';
+    public string $message = 'The user with email "{{ string }}" already exists!';
 }
