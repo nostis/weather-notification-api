@@ -2,12 +2,34 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Dto\User\UserRegisterInput;
+use App\Dto\User\UserRegisterOutput;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+
+/*#[ApiResource(
+    collectionOperations: [
+        "create" => [
+            "method" => "POST",
+            "input" => UserRegisterInput::class,
+            "output" => UserRegisterOutput::class
+        ]
+    ],
+    itemOperations: []
+)]*/ //need to refactor - I want to use attributes :(
+
 /**
+ * @ApiResource(
+ *     collectionOperations={
+ *          "create"={"method"="POST", "input"=UserRegisterInput::class, "output"=UserRegisterOutput::class}
+ *     },
+ *     itemOperations={}
+ * )
+ *
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  */
