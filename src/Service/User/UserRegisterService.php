@@ -5,13 +5,13 @@ namespace App\Service\User;
 use App\Dto\User\UserRegisterOutput;
 use App\Entity\User;
 use App\Entity\UserProfile;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserRegisterService
 {
-    private PasswordHasherInterface $passwordHasher;
+    private UserPasswordHasherInterface $passwordHasher;
 
-    public function __construct(PasswordHasherInterface $passwordHasher)
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
         $this->passwordHasher = $passwordHasher;
     }
@@ -29,7 +29,7 @@ class UserRegisterService
     {
         $user = new User();
         $user->setEmail($email);
-        $user->setPassword($this->getHashedPassword($plainPassword));
+        $user->setPassword($this->getHashedPassword($user, $plainPassword));
         $user->setAccountConfirmationToken($this->getRandomString());
 
         $userProfile = new UserProfile();
@@ -41,9 +41,9 @@ class UserRegisterService
         return $user;
     }
 
-    private function getHashedPassword(string $plainPassword): string
+    private function getHashedPassword(User $user, string $plainPassword): string
     {
-        return $this->passwordHasher->hash($plainPassword);
+        return $this->passwordHasher->hashPassword($user, $plainPassword);
     }
 
     private function getRandomString(): string
