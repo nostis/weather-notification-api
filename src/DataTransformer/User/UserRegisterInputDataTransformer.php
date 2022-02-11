@@ -8,7 +8,7 @@ use App\Dto\User\UserRegisterInput;
 use App\Entity\User;
 use App\Service\User\UserRegisterService;
 
-class UserRegisterInputDataTransfomer implements DataTransformerInterface
+class UserRegisterInputDataTransformer implements DataTransformerInterface
 {
     private ValidatorInterface $validator;
     private UserRegisterService $userRegisterService;
