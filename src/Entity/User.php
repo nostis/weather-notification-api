@@ -47,14 +47,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $passwordResetToken;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default": 0})
      */
-    private bool $isConfirmed;
+    private bool $isConfirmed = false;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default": 0})
      */
-    private bool $isEnabled;
+    private bool $isEnabled = false;
 
     /**
      * @ORM\OneToOne(targetEntity=UserProfile::class, mappedBy="userRelation", cascade={"persist", "remove"})
