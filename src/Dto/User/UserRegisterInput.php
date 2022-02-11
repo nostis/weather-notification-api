@@ -18,6 +18,7 @@ final class UserRegisterInput
     /**
      * @Assert\NotBlank()
      * @Assert\Length(min=8, max=255)
+     * @CustomAssert\StrongPassword()
      */
     public string $plainPassword;
 
