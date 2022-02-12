@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Action\NotFoundAction;
 
 
 /*#[ApiResource(
@@ -27,7 +28,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     collectionOperations={
  *          "create"={"method"="POST", "input"=UserRegisterInput::class, "output"=UserRegisterOutput::class}
  *     },
- *     itemOperations={}
+ *     itemOperations={
+ *          "get"={"controller"=NotFoundAction::class,"read"=false, "output"=false}
+ *     }
  * )
  *
  * @ORM\Entity(repositoryClass=UserRepository::class)
