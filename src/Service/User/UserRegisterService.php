@@ -5,6 +5,7 @@ namespace App\Service\User;
 use App\Dto\User\UserRegisterOutput;
 use App\Entity\User;
 use App\Entity\UserProfile;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserRegisterService
@@ -48,6 +49,8 @@ class UserRegisterService
 
     private function getRandomString(): string
     {
-        return uniqid();
+        $randomUuid = Uuid::uuid4();
+
+        return $randomUuid->toString();
     }
 }
