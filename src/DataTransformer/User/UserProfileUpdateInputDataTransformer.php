@@ -33,7 +33,7 @@ class UserProfileUpdateInputDataTransformer implements DataTransformerInterface
             return false;
         }
 
-        return User::class === $to && null !== ($context['input']['class'] ?? null);
+        return User::class === $to && null !== ($context['input']['class'] ?? null) && $context['input']['class'] == UserProfileUpdateInput::class;
     }
 
     private function transformInputToTarget(UserProfileUpdateInput $input, User $target): User
