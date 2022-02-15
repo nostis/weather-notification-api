@@ -25,3 +25,4 @@ services:
 
     'App\DataTransformer\User\UserRegisterInputDataTransformer': ~
     'App\DataTransformer\User\UserRegisterOutputDataTransformer': ~
+    'App\DataTransformer\User\UserProfileUpdateInputDataTransformer': ~

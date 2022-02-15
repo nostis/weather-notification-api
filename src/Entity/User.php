@@ -4,7 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Dto\User\UserRegisterInput;
-use App\Dto\User\UserRegisterOutput;
+use App\Dto\User\UserAccountOutput;
+use App\Dto\User\UserProfileUpdateInput;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -26,10 +27,11 @@ use ApiPlatform\Core\Action\NotFoundAction;
 /**
  * @ApiResource(
  *     collectionOperations={
- *          "create"={"method"="POST", "input"=UserRegisterInput::class, "output"=UserRegisterOutput::class}
+ *          "create"={"method"="POST", "input"=UserRegisterInput::class, "output"=UserAccountOutput::class}
  *     },
  *     itemOperations={
- *          "get"={"controller"=NotFoundAction::class,"read"=false, "output"=false}
+ *          "get"={"controller"=NotFoundAction::class,"read"=false, "output"=false},
+ *          "patch"={"method"="PATCH", "input"=UserProfileUpdateInput::class, "output"=UserAccountOutput::class}
  *     }
  * )
  *
