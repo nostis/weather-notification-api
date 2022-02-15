@@ -2,7 +2,7 @@
 
 namespace App\Service\User;
 
-use App\Dto\User\UserRegisterOutput;
+use App\Dto\User\UserAccountOutput;
 use App\Entity\User;
 use App\Entity\UserProfile;
 use Ramsey\Uuid\Uuid;
@@ -17,9 +17,9 @@ class UserRegisterService
         $this->passwordHasher = $passwordHasher;
     }
 
-    public function createUserOutputDto(User $user): UserRegisterOutput
+    public function createUserOutputDto(User $user): UserAccountOutput
     {
-        $userOutputDto = new UserRegisterOutput();
+        $userOutputDto = new UserAccountOutput();
         $userOutputDto->email = $user->getEmail();
         $userOutputDto->name = $user->getUserProfile()->getName();
 
