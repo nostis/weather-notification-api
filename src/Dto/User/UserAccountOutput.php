@@ -2,7 +2,7 @@
 
 namespace App\Dto\User;
 
-final class UserRegisterOutput
+final class UserAccountOutput
 {
     public string $email;
 

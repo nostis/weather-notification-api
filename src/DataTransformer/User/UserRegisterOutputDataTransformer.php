@@ -3,7 +3,7 @@
 namespace App\DataTransformer\User;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\User\UserRegisterOutput;
+use App\Dto\User\UserAccountOutput;
 use App\Entity\User;
 use App\Service\User\UserRegisterService;
 
@@ -31,6 +31,6 @@ class UserRegisterOutputDataTransformer implements DataTransformerInterface
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        return UserRegisterOutput::class === $to && $data instanceof User;
+        return UserAccountOutput::class === $to && $data instanceof User;
     }
 }
