@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Dto\User\UserRegisterInput;
 use App\Dto\User\UserAccountOutput;
@@ -10,82 +11,58 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use ApiPlatform\Core\Action\NotFoundAction;
 
-
-/*#[ApiResource(
+#[ApiResource(
     collectionOperations: [
-        "create" => [
-            "method" => "POST",
-            "input" => UserRegisterInput::class,
-            "output" => UserRegisterOutput::class
+        'create' => [
+            'method' => 'POST',
+            'input' => UserRegisterInput::class,
+            'output' => UserAccountOutput::class
         ]
     ],
-    itemOperations: []
-)]*/ //need to refactor - I want to use attributes :(
+    itemOperations: [
+        'patch' => [
+            'method' => 'PATCH',
+            'input' => UserProfileUpdateInput::class,
+            'output' => UserAccountOutput::class
+        ],
+        'get' => [
+            'controller' => NotFoundAction::class,
+            'read' => false,
+            'output' => false,
+        ]
+    ]
+)]
 
-/**
- * @ApiResource(
- *     collectionOperations={
- *          "create"={"method"="POST", "input"=UserRegisterInput::class, "output"=UserAccountOutput::class}
- *     },
- *     itemOperations={
- *          "get"={"controller"=NotFoundAction::class,"read"=false, "output"=false},
- *          "patch"={"method"="PATCH", "input"=UserProfileUpdateInput::class, "output"=UserAccountOutput::class}
- *     }
- * )
- *
- * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ORM\Table(name="`user`")
- */
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: '`user`')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id, ORM\Column(type: 'integer'), ORM\GeneratedValue()]
     private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     */
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
     private string $email;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private string $password;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $accountConfirmationToken;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $passwordResetToken;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default": 0})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => 0])]
     private bool $isConfirmed = false;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default": 0})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => 0])]
     private bool $isEnabled = false;
 
-    /**
-     * @ORM\OneToOne(targetEntity=UserProfile::class, mappedBy="userRelation", cascade={"persist", "remove"})
-     */
+    #[ORM\OneToOne(mappedBy: 'userRelation', targetEntity: UserProfile::class, cascade: ['persist', 'remove'])]
     private UserProfile $userProfile;
 
     public function getId(): ?int
