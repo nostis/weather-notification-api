@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\Api\ConfirmAccountController;
+use App\Dto\User\UserConfirmAccountInput;
 use App\Dto\User\UserRegisterInput;
 use App\Dto\User\UserAccountOutput;
 use App\Dto\User\UserProfileUpdateInput;
@@ -18,6 +20,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
             'method' => 'POST',
             'input' => UserRegisterInput::class,
             'output' => UserAccountOutput::class
+        ],
+        'confirm_account' => [
+            'method' => 'POST',
+            'path' => '/users/confirm_account',
+            'input' => UserConfirmAccountInput::class,
+            'output' => UserAccountOutput::class,
+            'receive' => false, //bypass default data transformer - after this option custom controller will receive custom input without transforming -> GeneralDtoInputDataTransformer
+            'controller' => ConfirmAccountController::class
         ]
     ],
     itemOperations: [
