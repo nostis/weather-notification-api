@@ -24,7 +24,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
         'patch' => [
             'method' => 'PATCH',
             'input' => UserProfileUpdateInput::class,
-            'output' => UserAccountOutput::class
+            'output' => UserAccountOutput::class,
+            'security' => "is_granted('ROLE_USER') and object == user"
         ],
         'get' => [
             'controller' => NotFoundAction::class,
