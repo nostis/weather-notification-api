@@ -4,14 +4,17 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Metadata\Resource\Factory\ResourceMetadataFactoryInterface;
+use ApiPlatform\Core\Validator\ValidatorInterface;
 
 class GeneralDtoInputDataTransformer implements DataTransformerInterface
 {
     private ResourceMetadataFactoryInterface $resourceMetadataFactory;
+    private ValidatorInterface $validator;
 
-    public function __construct(ResourceMetadataFactoryInterface $resourceMetadataFactory)
+    public function __construct(ResourceMetadataFactoryInterface $resourceMetadataFactory, ValidatorInterface $validator)
     {
         $this->resourceMetadataFactory = $resourceMetadataFactory;
+        $this->validator = $validator;
     }
 
     /**
@@ -19,6 +22,8 @@ class GeneralDtoInputDataTransformer implements DataTransformerInterface
      */
     public function transform($object, string $to, array $context = [])
     {
+        $this->validator->validate($object);
+
         return $object;
     }
 
