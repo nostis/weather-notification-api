@@ -3,8 +3,8 @@
 namespace App\Service\User;
 
 use App\Entity\User;
-use App\Exception\User\UnableToRequestPasswordReset;
-use App\Exception\User\WrongConfirmationTokenException;
+use App\Exception\User\UserNotActiveException;
+use App\Exception\User\UserAlreadyActivatedException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -19,68 +19,52 @@ class UserAccountService extends AbstractUserService
         parent::__construct($userPasswordHasher);
     }
 
-    public function getUserWithResettedPassword(string $passwordResetToken, string $newPlainPassword): User
+    public function resetPassword(User $user, string $newPlainPassword): void
     {
-        $foundUser = $this->entityManager->getRepository(User::class)->findUserByPasswordResetToken($passwordResetToken);
-
-        if($this->isRequestPasswordResetActionUserNotValid($foundUser)) {
-            throw new UnableToRequestPasswordReset();
-        }
-
-        $foundUser->setPasswordResetToken(null);
-        $foundUser->setPassword($this->getHashedPassword($foundUser, $newPlainPassword));
-
-        $this->entityManager->flush();
-
-        //handle mail - dispatch event?
-
-        return $foundUser;
-    }
-
-    public function requestPasswordReset(string $email): void
-    {
-        $foundUser = $this->entityManager->getRepository(User::class)->findUserByEmail($email);
-
-        if($this->isRequestPasswordResetActionUserNotValid($foundUser)) {
-            throw new UnableToRequestPasswordReset();
-        }
-
-        $foundUser->setPasswordResetToken($this->getRandomString());
+        $user->setPasswordResetToken(null);
+        $user->setPassword($this->getHashedPassword($user, $newPlainPassword));
 
         $this->entityManager->flush();
 
         //handle mail - dispatch event?
     }
 
-    public function confirmAccount(string $confirmationToken): void
+    public function requestPasswordReset(User $user): void
     {
-        $foundUser = $this->entityManager->getRepository(User::class)->findUserByConfirmationToken($confirmationToken);
-
-        if($this->isConfirmAccountActionUserNotValid($foundUser)) {
-            throw new WrongConfirmationTokenException();
+        if($this->isUserNotActive($user)) {
+            throw new UserNotActiveException();
         }
 
-        $foundUser->setIsConfirmed(true);
-        $foundUser->setIsEnabled(true);
+        $user->setPasswordResetToken($this->getRandomString());
 
-        $this->entityManager->flush($foundUser);
+        $this->entityManager->flush();
+
+        //handle mail - dispatch event?
     }
 
-    private function isRequestPasswordResetActionUserNotValid(?User $user): bool
+    public function confirmAccount(User $user): void
     {
-        if($user == null || !$user->getIsConfirmed() || !$user->getIsEnabled()) { //user not found or not activated or disabled
+        if($this->isUserAlreadyConfirmed($user)) {
+            throw new UserAlreadyActivatedException();
+        }
+
+        $user->setIsConfirmed(true);
+        $user->setIsEnabled(true);
+
+        $this->entityManager->flush($user);
+    }
+
+    private function isUserNotActive(User $user): bool
+    {
+        if(!$this->isUserActive($user)) { //user not found or not active
             return true;
         }
 
         return false;
     }
 
-    private function isConfirmAccountActionUserNotValid(?User $user): bool
+    private function isUserAlreadyConfirmed(User $user): bool
     {
-        if($user == null || $user->getIsConfirmed()) { //user not found or already activated
-            return true;
-        }
-
-        return false;
+        return $user->getIsConfirmed();
     }
 }
