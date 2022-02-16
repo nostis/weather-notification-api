@@ -33,3 +33,10 @@ services:
         autoconfigure: false
         tags:
             - { name: serializer.normalizer }
+
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]
