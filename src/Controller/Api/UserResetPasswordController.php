@@ -4,22 +4,27 @@ namespace App\Controller\Api;
 
 use App\Dto\User\UserAccountOutput;
 use App\Dto\User\UserResetPasswordInput;
+use App\Service\User\AbstractUserService;
 use App\Service\User\UserAccountService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 
-class UserResetPasswordController extends AbstractController
+class UserResetPasswordController extends AbstractUserController
 {
     private UserAccountService $userAccountService;
 
-    public function __construct(UserAccountService $userAccountService)
+    public function __construct(UserAccountService $userAccountService, EntityManagerInterface $entityManager)
     {
         $this->userAccountService = $userAccountService;
+
+        parent::__construct($entityManager);
     }
 
     public function __invoke(UserResetPasswordInput $data): UserAccountOutput
     {
-        $user = $this->userAccountService->getUserWithResettedPassword($data->passwordResetToken, $data->newPlainPassword);
+        $user = $this->getUserByPropertyAndValue('passwordResetToken', $data->passwordResetToken);
 
-        return $this->userAccountService->createUserOutputDto($user);
+        $this->userAccountService->resetPassword($user, $data->newPlainPassword);
+
+        return AbstractUserService::createUserOutputDto($user);
     }
 }
