@@ -5,7 +5,9 @@ namespace App\Entity;
 use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\Api\ConfirmAccountController;
+use App\Controller\Api\UserPasswordResetRequestController;
 use App\Dto\User\UserConfirmAccountInput;
+use App\Dto\User\UserPasswordResetRequest;
 use App\Dto\User\UserRegisterInput;
 use App\Dto\User\UserAccountOutput;
 use App\Dto\User\UserProfileUpdateInput;
@@ -28,6 +30,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
             'output' => UserAccountOutput::class,
             'receive' => false, //bypass default data transformer - after this option custom controller will receive custom input without transforming -> GeneralDtoInputDataTransformer
             'controller' => ConfirmAccountController::class
+        ],
+        'request_password_reset' => [
+            'method' => 'POST',
+            'path' => '/users/password_reset_request',
+            'input' => UserPasswordResetRequest::class,
+            'output' => false,
+            'receive' => false,
+            'controller' => UserPasswordResetRequestController::class
         ]
     ],
     itemOperations: [
