@@ -28,12 +28,17 @@ abstract class AbstractUserService
         return $this->passwordHasher->hashPassword($user, $plainPassword);
     }
 
-    public function createUserOutputDto(User $user): UserAccountOutput
+    public static function createUserOutputDto(User $user): UserAccountOutput
     {
         $userOutputDto = new UserAccountOutput();
         $userOutputDto->email = $user->getEmail();
         $userOutputDto->name = $user->getUserProfile()->getName();
 
         return $userOutputDto;
+    }
+
+    public function isUserActive(User $user): bool
+    {
+        return $user->getIsConfirmed() && $user->getIsEnabled();
     }
 }
