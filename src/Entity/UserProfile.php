@@ -4,10 +4,13 @@ namespace App\Entity;
 
 use App\Repository\UserProfileRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: UserProfileRepository::class)]
 class UserProfile
 {
+    use TimestampableEntity;
+
     #[ORM\Id, ORM\Column(type: 'integer'), ORM\GeneratedValue()]
     private int $id;
 
