@@ -22,6 +22,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
     collectionOperations: [
         'create' => [
             'method' => 'POST',
+            'path' => '/users/create_account',
             'input' => UserRegisterInput::class,
             'output' => UserAccountOutput::class
         ],
