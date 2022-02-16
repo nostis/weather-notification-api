@@ -4,16 +4,22 @@ namespace App\Service\User;
 
 use App\Dto\User\UserAccountOutput;
 use App\Entity\User;
+use App\Service\Mail\Mailer;
+use App\Service\Mail\MailFactory;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 abstract class AbstractUserService
 {
     private UserPasswordHasherInterface $passwordHasher;
+    protected MailFactory $mailFactory;
+    protected Mailer $mailer;
 
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    public function __construct(UserPasswordHasherInterface $passwordHasher, MailFactory $mailFactory, Mailer $mailer)
     {
         $this->passwordHasher = $passwordHasher;
+        $this->mailFactory = $mailFactory;
+        $this->mailer = $mailer;
     }
 
     protected function getRandomString(): string

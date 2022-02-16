@@ -2,11 +2,8 @@
 
 namespace App\Service\User;
 
-use App\Dto\User\UserAccountOutput;
 use App\Entity\User;
 use App\Entity\UserProfile;
-use Ramsey\Uuid\Uuid;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserRegisterService extends AbstractUserService
 {
@@ -23,6 +20,15 @@ class UserRegisterService extends AbstractUserService
 
         $user->setUserProfile($userProfile);
 
+        $this->sendUserCreatedMail($user);
+
         return $user;
+    }
+
+    private function sendUserCreatedMail(User $user)
+    {
+        $mail = $this->mailFactory->createUserAccountCreatedEmail($user);
+
+        $this->mailer->send($mail);
     }
 }
