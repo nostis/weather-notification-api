@@ -16,7 +16,7 @@ class Mail
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(name: 'mail_to', type: 'string', length: 255)]
     private string $to;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -84,7 +84,7 @@ class Mail
         return $this;
     }
 
-    public function getSentAt(): ?\DateTimeImmutable
+    public function getSentAt(): ?\DateTimeInterface
     {
         return $this->sentAt;
     }
