@@ -27,8 +27,8 @@ class GeneralDtoInputDataTransformer implements DataTransformerInterface
         return $object;
     }
 
-    public function supportsTransformation($data, string $to, array $context = []): bool {
-
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
         if (\is_object($data) || null === ($context['input']['class'] ?? null))
             return false;
 
