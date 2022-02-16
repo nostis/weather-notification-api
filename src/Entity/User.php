@@ -6,11 +6,13 @@ use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\Api\ConfirmAccountController;
 use App\Controller\Api\UserPasswordResetRequestController;
+use App\Controller\Api\UserResetPasswordController;
 use App\Dto\User\UserConfirmAccountInput;
 use App\Dto\User\UserPasswordResetRequestInput;
 use App\Dto\User\UserRegisterInput;
 use App\Dto\User\UserAccountOutput;
 use App\Dto\User\UserProfileUpdateInput;
+use App\Dto\User\UserResetPasswordInput;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -38,6 +40,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
             'output' => false,
             'receive' => false,
             'controller' => UserPasswordResetRequestController::class
+        ],
+        'reset_password' => [
+            'method' => 'POST',
+            'path' => '/users/reset_password',
+            'input' => UserResetPasswordInput::class,
+            'output' => UserAccountOutput::class,
+            'receive' => false,
+            'controller' => UserResetPasswordController::class
         ]
     ],
     itemOperations: [
@@ -75,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $accountConfirmationToken;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private string $passwordResetToken;
+    private ?string $passwordResetToken;
 
     #[ORM\Column(type: 'boolean', options: ['default' => 0])]
     private bool $isConfirmed = false;
