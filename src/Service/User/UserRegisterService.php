@@ -8,7 +8,7 @@ use App\Entity\UserProfile;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserRegisterService
+class UserRegisterService extends AbstractUserService
 {
     private UserPasswordHasherInterface $passwordHasher;
 
@@ -45,12 +45,5 @@ class UserRegisterService
     private function getHashedPassword(User $user, string $plainPassword): string
     {
         return $this->passwordHasher->hashPassword($user, $plainPassword);
-    }
-
-    private function getRandomString(): string
-    {
-        $randomUuid = Uuid::uuid4();
-
-        return $randomUuid->toString();
     }
 }
