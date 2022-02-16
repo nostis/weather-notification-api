@@ -10,22 +10,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserRegisterService extends AbstractUserService
 {
-    private UserPasswordHasherInterface $passwordHasher;
-
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
-    {
-        $this->passwordHasher = $passwordHasher;
-    }
-
-    public function createUserOutputDto(User $user): UserAccountOutput
-    {
-        $userOutputDto = new UserAccountOutput();
-        $userOutputDto->email = $user->getEmail();
-        $userOutputDto->name = $user->getUserProfile()->getName();
-
-        return $userOutputDto;
-    }
-
     public function createUser(string $email, string $plainPassword, string $name): User
     {
         $user = new User();
@@ -40,10 +24,5 @@ class UserRegisterService extends AbstractUserService
         $user->setUserProfile($userProfile);
 
         return $user;
-    }
-
-    private function getHashedPassword(User $user, string $plainPassword): string
-    {
-        return $this->passwordHasher->hashPassword($user, $plainPassword);
     }
 }

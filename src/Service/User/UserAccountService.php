@@ -6,14 +6,35 @@ use App\Entity\User;
 use App\Exception\User\UnableToRequestPasswordReset;
 use App\Exception\User\WrongConfirmationTokenException;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserAccountService extends AbstractUserService
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->entityManager = $entityManager;
+
+        parent::__construct($userPasswordHasher);
+    }
+
+    public function getUserWithResettedPassword(string $passwordResetToken, string $newPlainPassword): User
+    {
+        $foundUser = $this->entityManager->getRepository(User::class)->findUserByPasswordResetToken($passwordResetToken);
+
+        if($this->isRequestPasswordResetActionUserNotValid($foundUser)) {
+            throw new UnableToRequestPasswordReset();
+        }
+
+        $foundUser->setPasswordResetToken(null);
+        $foundUser->setPassword($this->getHashedPassword($foundUser, $newPlainPassword));
+
+        $this->entityManager->flush();
+
+        //handle mail - dispatch event?
+
+        return $foundUser;
     }
 
     public function requestPasswordReset(string $email): void
