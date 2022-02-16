@@ -2,11 +2,11 @@
 
 namespace App\Controller\Api;
 
-use ApiPlatform\Core\Exception\PropertyNotFoundException;
 use App\Entity\User;
+use App\Exception\User\BadPropertyException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class AbstractUserController extends AbstractController
 {
@@ -22,11 +22,11 @@ abstract class AbstractUserController extends AbstractController
         try {
             $user = $this->entityManager->getRepository(User::class)->findOneBy([$property => $value]);
         } catch (\Exception $e) {
-            throw new PropertyNotFoundException();
+            throw new BadPropertyException();
         }
 
         if($user == null) {
-            throw new UserNotFoundException();
+            throw new NotFoundHttpException();
         }
 
         return $user;
