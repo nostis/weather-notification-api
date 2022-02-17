@@ -27,7 +27,7 @@ class UserRegisterService extends AbstractUserService
 
     private function sendUserCreatedMail(User $user)
     {
-        $mail = $this->mailFactory->createUserAccountCreatedEmail($user);
+        $mail = $this->mailFactory->createUserAccountCreatedMail($user);
 
         $this->mailer->send($mail);
     }

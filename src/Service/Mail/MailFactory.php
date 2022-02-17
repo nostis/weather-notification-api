@@ -15,15 +15,37 @@ class MailFactory
         $this->twig = $twig;
     }
 
-    public function createUserAccountCreatedEmail(User $user): Mail
+    public function createUserAccountCreatedMail(User $user): Mail
+    {
+        $mail = $this->getMailWrappedWithUserData($user);
+
+        $userName = $user->getUserProfile()->getName();
+
+        $mail->setSubject('Confirm your account');
+        $mail->setHtmlContent($this->twig->render('mail/user_account_created.html.twig', ['name' => $userName, 'confirmationToken' => $user->getAccountConfirmationToken()]));
+
+        return $mail;
+    }
+
+    public function createPasswordResetRequestMail(User $user): Mail
+    {
+        $mail = $this->getMailWrappedWithUserData($user);
+
+        $userName = $user->getUserProfile()->getName();
+
+        $mail->setSubject('Reset your password');
+        $mail->setHtmlContent($this->twig->render('mail/user_password_reset_request.html.twig', ['name' => $userName, 'passwordResetToken' => $user->getPasswordResetToken()]));
+
+        return $mail;
+    }
+
+    private function getMailWrappedWithUserData(User $user): Mail
     {
         $userName = $user->getUserProfile()->getName();
 
         $mail = new Mail();
-        $mail->setSubject('Witaj/Hello'); //translation?
         $mail->setTo($user->getEmail());
         $mail->setClientName($userName);
-        $mail->setHtmlContent($this->twig->render('mail/user_account_created.html.twig', ['name' => $userName, 'confirmationToken' => $user->getAccountConfirmationToken()]));
 
         return $mail;
     }
