@@ -62,7 +62,8 @@
 # Other
 /.idea
 /.php-version
-/public/
+/public/*
+!/public/index.php
 
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
