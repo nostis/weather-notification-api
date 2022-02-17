@@ -5,20 +5,19 @@ namespace App\Service\User;
 use App\Entity\User;
 use App\Exception\User\UserNotActiveException;
 use App\Exception\User\UserAlreadyActivatedException;
-use App\Service\Mail\Mailer;
-use App\Service\Mail\MailFactory;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserAccountService extends AbstractUserService
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, MailFactory $mailFactory, Mailer $mailer)
+    public function __construct(EntityManagerInterface $entityManager, EventDispatcherInterface $eventDispatcher, UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->entityManager = $entityManager;
 
-        parent::__construct($userPasswordHasher, $mailFactory, $mailer);
+        parent::__construct($userPasswordHasher, $eventDispatcher);
     }
 
     public function resetPassword(User $user, string $newPlainPassword): void

@@ -4,6 +4,7 @@ namespace App\Service\User;
 
 use App\Entity\User;
 use App\Entity\UserProfile;
+use App\Event\UserAccountCreatedEvent;
 
 class UserRegisterService extends AbstractUserService
 {
@@ -20,15 +21,8 @@ class UserRegisterService extends AbstractUserService
 
         $user->setUserProfile($userProfile);
 
-        $this->sendUserCreatedMail($user);
+        $this->eventDispatcher->dispatch(new UserAccountCreatedEvent($user), UserAccountCreatedEvent::NAME);
 
         return $user;
-    }
-
-    private function sendUserCreatedMail(User $user)
-    {
-        $mail = $this->mailFactory->createUserAccountCreatedMail($user);
-
-        $this->mailer->send($mail);
     }
 }
