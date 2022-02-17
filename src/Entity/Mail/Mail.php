@@ -31,6 +31,9 @@ class Mail
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeInterface $sentAt;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $errorMessage;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -94,5 +97,15 @@ class Mail
         $this->sentAt = $sentAt;
 
         return $this;
+    }
+
+    public function getErrorMessage(): ?string
+    {
+        return $this->errorMessage;
+    }
+
+    public function setErrorMessage(?string $errorMessage): void
+    {
+        $this->errorMessage = $errorMessage;
     }
 }

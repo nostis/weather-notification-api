@@ -41,7 +41,8 @@ class Mailer
     {
         try {
             $this->symfonyMailer->send($this->createMailFromMailEntity($mail));
-        } catch (TransportExceptionInterface $e) {
+        } catch (\Exception $e) {
+            $mail->setErrorMessage($e->getMessage()); //maybe create command and retry send? (create message and put to queue)
             $this->logger->error(sprintf('Error when trying to send email: %s', $e->getMessage()));
         }
 
@@ -53,7 +54,7 @@ class Mailer
     private function createMailFromMailEntity(Mail $mail): Email
     {
         return (new Email())
-            ->from($this->parameters->get('app.mail_from')) // or no?
+            ->from($this->parameters->get('app.mail_from'))
             ->to($mail->getTo())
             ->subject($mail->getSubject())
             ->html($mail->getHtmlContent());
