@@ -3,6 +3,7 @@
 namespace App\Service\User;
 
 use App\Entity\User;
+use App\Event\UserPasswordResetRequestEvent;
 use App\Exception\User\UserNotActiveException;
 use App\Exception\User\UserAlreadyActivatedException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,8 +27,6 @@ class UserAccountService extends AbstractUserService
         $user->setPassword($this->getHashedPassword($user, $newPlainPassword));
 
         $this->entityManager->flush();
-
-        //handle mail - dispatch event?
     }
 
     public function requestPasswordReset(User $user): void
@@ -40,7 +39,7 @@ class UserAccountService extends AbstractUserService
 
         $this->entityManager->flush();
 
-        //handle mail - dispatch event?
+        $this->eventDispatcher->dispatch(new UserPasswordResetRequestEvent($user), UserPasswordResetRequestEvent::NAME);
     }
 
     public function confirmAccount(User $user): void
@@ -57,7 +56,7 @@ class UserAccountService extends AbstractUserService
 
     private function isUserNotActive(User $user): bool
     {
-        if(!$this->isUserActive($user)) { //user not found or not active
+        if(!$this->isUserActive($user)) {
             return true;
         }
 
