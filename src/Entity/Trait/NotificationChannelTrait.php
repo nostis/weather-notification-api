@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait NotificationChannelTrait
 {
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'notificationChannels')]
+    #[ORM\OneToOne(inversedBy: 'notificationChannel', targetEntity: User::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private User $user;
 

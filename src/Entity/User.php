@@ -102,13 +102,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'userRelation', targetEntity: UserProfile::class, cascade: ['persist', 'remove'])]
     private UserProfile $userProfile;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EmailNotificationChannel::class)]
-    private Collection $emailNotificationChannels;
-
-    public function __construct()
-    {
-        $this->emailNotificationChannels = new ArrayCollection();
-    }
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: EmailNotificationChannel::class, cascade: ['persist', 'remove'])]
+    private EmailNotificationChannel $emailNotificationChannel;
 
     public function getId(): ?int
     {
@@ -264,32 +259,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|EmailNotificationChannel[]
-     */
-    public function getEmailNotificationChannels(): Collection
+    public function getEmailNotificationChannel(): ?EmailNotificationChannel
     {
-        return $this->emailNotificationChannels;
+        return $this->emailNotificationChannel;
     }
 
-    public function addEmailNotificationChannel(EmailNotificationChannel $emailNotificationChannel): self
+    public function setEmailNotificationChannel(EmailNotificationChannel $emailNotificationChannel): self
     {
-        if (!$this->emailNotificationChannels->contains($emailNotificationChannel)) {
-            $this->emailNotificationChannels[] = $emailNotificationChannel;
+        // set the owning side of the relation if necessary
+        if ($emailNotificationChannel->getUser() !== $this) {
             $emailNotificationChannel->setUser($this);
         }
 
-        return $this;
-    }
-
-    public function removeEmailNotificationChannel(EmailNotificationChannel $emailNotificationChannel): self
-    {
-        if ($this->emailNotificationChannels->removeElement($emailNotificationChannel)) {
-            // set the owning side to null (unless already changed)
-            if ($emailNotificationChannel->getUser() === $this) {
-                $emailNotificationChannel->setUser(null);
-            }
-        }
+        $this->emailNotificationChannel = $emailNotificationChannel;
 
         return $this;
     }
