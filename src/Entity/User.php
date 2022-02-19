@@ -14,6 +14,8 @@ use App\Dto\User\UserAccountOutput;
 use App\Dto\User\UserProfileUpdateInput;
 use App\Dto\User\UserResetPasswordInput;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -99,6 +101,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(mappedBy: 'userRelation', targetEntity: UserProfile::class, cascade: ['persist', 'remove'])]
     private UserProfile $userProfile;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EmailNotificationChannel::class)]
+    private Collection $emailNotificationChannels;
+
+    public function __construct()
+    {
+        $this->emailNotificationChannels = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -250,6 +260,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->userProfile = $userProfile;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|EmailNotificationChannel[]
+     */
+    public function getEmailNotificationChannels(): Collection
+    {
+        return $this->emailNotificationChannels;
+    }
+
+    public function addEmailNotificationChannel(EmailNotificationChannel $emailNotificationChannel): self
+    {
+        if (!$this->emailNotificationChannels->contains($emailNotificationChannel)) {
+            $this->emailNotificationChannels[] = $emailNotificationChannel;
+            $emailNotificationChannel->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEmailNotificationChannel(EmailNotificationChannel $emailNotificationChannel): self
+    {
+        if ($this->emailNotificationChannels->removeElement($emailNotificationChannel)) {
+            // set the owning side to null (unless already changed)
+            if ($emailNotificationChannel->getUser() === $this) {
+                $emailNotificationChannel->setUser(null);
+            }
+        }
 
         return $this;
     }
