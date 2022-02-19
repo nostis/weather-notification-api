@@ -34,6 +34,9 @@ class Mail
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $errorMessage;
 
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $retryCount = 0;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -107,5 +110,15 @@ class Mail
     public function setErrorMessage(?string $errorMessage): void
     {
         $this->errorMessage = $errorMessage;
+    }
+
+    public function getRetryCount(): int
+    {
+        return $this->retryCount;
+    }
+
+    public function setRetryCount(int $retryCount): void
+    {
+        $this->retryCount = $retryCount;
     }
 }
