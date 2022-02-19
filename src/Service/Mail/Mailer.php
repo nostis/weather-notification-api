@@ -7,7 +7,6 @@ use App\Message\MailMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Mime\Email;
@@ -41,12 +40,16 @@ class Mailer
     {
         try {
             $this->symfonyMailer->send($this->createMailFromMailEntity($mail));
+
+            $mail->setSentAt(new \DateTimeImmutable());
         } catch (\Exception $e) {
-            $mail->setErrorMessage($e->getMessage()); //maybe create command and retry send? (create message and put to queue)
+            if($this->isMailAlreadyHasErrorMessage($mail)) {
+                $mail = $this->increaseRetryCount($mail);
+            }
+
+            $mail->setErrorMessage($e->getMessage());
             $this->logger->error(sprintf('Error when trying to send email: %s', $e->getMessage()));
         }
-
-        $mail->setSentAt(new \DateTimeImmutable());
 
         $this->entityManager->flush();
     }
@@ -58,5 +61,17 @@ class Mailer
             ->to($mail->getTo())
             ->subject($mail->getSubject())
             ->html($mail->getHtmlContent());
+    }
+
+    private function isMailAlreadyHasErrorMessage(Mail $mail): bool
+    {
+        return $mail->getErrorMessage() != null;
+    }
+
+    private function increaseRetryCount(Mail $mail): Mail
+    {
+        $mail->setRetryCount($mail->getRetryCount() + 1);
+
+        return $mail;
     }
 }
