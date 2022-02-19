@@ -5,3 +5,6 @@ Important things to do:
 - composer install
 
 - bin/console lexik:jwt:generate-keypair
+
+Command:
+- app:retry-mail-delivery every 5/10 min
