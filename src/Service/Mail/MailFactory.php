@@ -4,6 +4,7 @@ namespace App\Service\Mail;
 
 use App\Entity\Mail\Mail;
 use App\Entity\User;
+use Symfony\Component\Mime\Address;
 use Twig\Environment;
 
 class MailFactory
@@ -13,6 +14,18 @@ class MailFactory
     public function __construct(Environment $twig)
     {
         $this->twig = $twig;
+    }
+
+    public function createSimpleMail(string $subject, string $content, Address $address, ?string $clientName): Mail
+    {
+        $mail = new Mail();
+
+        $mail->setSubject($subject);
+        $mail->setHtmlContent($content);
+        $mail->setTo($address->getAddress());
+        $mail->setClientName($clientName);
+
+        return $mail;
     }
 
     public function createUserAccountCreatedMail(User $user): Mail
