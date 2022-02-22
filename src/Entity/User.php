@@ -105,6 +105,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: EmailNotificationChannel::class, cascade: ['persist', 'remove'])]
     private EmailNotificationChannel $emailNotificationChannel;
 
+    #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private City $city;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -272,6 +276,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->emailNotificationChannel = $emailNotificationChannel;
+
+        return $this;
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }
