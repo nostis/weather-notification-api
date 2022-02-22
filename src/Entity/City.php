@@ -2,10 +2,24 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+#[ApiResource(
+    collectionOperations: [
+        'get'
+    ],
+    itemOperations: [
+        'get'
+    ],
+    normalizationContext: [
+        'groups' => ['read']
+    ]
+)]
 
 #[ORM\Entity(repositoryClass: CityRepository::class)]
 class City
@@ -13,15 +27,19 @@ class City
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read'])]
     private int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read'])]
     private string $name;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 8)]
+    #[Groups(['read'])]
     private string $lat;
 
     #[ORM\Column(type: 'decimal', precision: 11, scale: 8)]
+    #[Groups(['read'])]
     private string $lng;
 
     #[ORM\OneToMany(mappedBy: 'city', targetEntity: User::class)]
