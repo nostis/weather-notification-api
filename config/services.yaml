@@ -24,6 +24,10 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    App\Command\LoadCitiesCommand:
+        arguments:
+            $cityLoader: '@App\Service\City\CityLoaderFromFileService'
+
     'App\DataTransformer\User\UserRegisterInputDataTransformer': ~
     'App\DataTransformer\User\UserRegisterOutputDataTransformer': ~
     'App\DataTransformer\User\UserProfileUpdateInputDataTransformer': ~
