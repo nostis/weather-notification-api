@@ -2,6 +2,7 @@
 
 namespace App\Service\User;
 
+use App\Entity\City;
 use App\Entity\User;
 use App\Entity\UserProfile;
 use App\Event\UserAccountCreatedEvent;
@@ -20,11 +21,12 @@ class UserRegisterService extends AbstractUserService
         parent::__construct($passwordHasher, $eventDispatcher);
     }
 
-    public function createUser(string $email, string $plainPassword, string $name): User
+    public function createUser(string $email, string $plainPassword, string $name, City $city): User
     {
         $user = new User();
         $user->setEmail($email);
         $user->setPassword($this->getHashedPassword($user, $plainPassword));
+        $user->setCity($city);
         $user->setAccountConfirmationToken($this->getRandomString());
 
         $userProfile = $this->createUserProfile($user, $name);

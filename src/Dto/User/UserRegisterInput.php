@@ -2,6 +2,7 @@
 
 namespace App\Dto\User;
 
+use App\Entity\City;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator as CustomAssert;
 
@@ -27,4 +28,9 @@ final class UserRegisterInput
      * @Assert\Length(max=255)
      */
     public string $name;
+
+    /**
+     * @Assert\NotBlank()
+     */
+    public City $city;
 }

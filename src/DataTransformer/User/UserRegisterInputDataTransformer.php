@@ -26,7 +26,7 @@ class UserRegisterInputDataTransformer implements DataTransformerInterface
     {
         $this->validator->validate($object);
 
-        return $this->userRegisterService->createUser($object->email, $object->plainPassword, $object->name);
+        return $this->userRegisterService->createUser($object->email, $object->plainPassword, $object->name, $object->city);
     }
 
     public function supportsTransformation($data, string $to, array $context = []): bool
