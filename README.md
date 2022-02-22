@@ -8,3 +8,5 @@ Important things to do:
 
 Command:
 - app:retry-mail-delivery every 5/10 min
+
+Cities downloaded from: https://simplemaps.com/data/pl-cities
