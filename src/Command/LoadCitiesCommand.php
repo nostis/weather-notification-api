@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\City;
+use App\Exception\CitiesAlreadyExistsException;
 use App\Service\City\CityLoaderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -32,6 +33,10 @@ class LoadCitiesCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        if($this->areCitiesAlreadyExists()) {
+            throw new CitiesAlreadyExistsException();
+        }
+
         $cities = $this->cityLoader->getLoadedCities();
 
         /**
@@ -46,5 +51,13 @@ class LoadCitiesCommand extends Command
         $io->success('Successfully loaded cities to db');
 
         return Command::SUCCESS;
+    }
+
+    private function areCitiesAlreadyExists(): bool
+    {
+        return $this->entityManager->getRepository(City::class)->createQueryBuilder('city')
+            ->select('COUNT(city.id) as count')
+            ->getQuery()->getSingleScalarResult()
+            ;
     }
 }

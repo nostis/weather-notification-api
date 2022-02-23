@@ -3,11 +3,9 @@
 namespace App\Service\City;
 
 use App\Entity\City;
-use App\Exception\CitiesAlreadyExistsException;
 use App\Exception\FailedToAccessDataException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
@@ -16,21 +14,15 @@ class CityLoaderFromFileService implements CityLoaderInterface
 {
     private const FILE_PATH = 'resource/cities.csv';
 
-    private EntityManagerInterface $entityManager;
     private DecoderInterface $decoder;
 
-    public function __construct(EntityManagerInterface $entityManager, DecoderInterface $decoder)
+    public function __construct(DecoderInterface $decoder)
     {
-        $this->entityManager = $entityManager;
         $this->decoder = $decoder;
     }
 
     public function getLoadedCities(): Collection
     {
-        if($this->areCitiesAlreadyExists()) {
-            throw new CitiesAlreadyExistsException();
-        }
-
         if($this->isCitiesFileNotExists()) {
             throw new FileNotFoundException('Cities file not found');
         }
@@ -52,14 +44,6 @@ class CityLoaderFromFileService implements CityLoaderInterface
         }
 
         return $citiesToReturn;
-    }
-
-    private function areCitiesAlreadyExists(): bool
-    {
-        return $this->entityManager->getRepository(City::class)->createQueryBuilder('city')
-            ->select('COUNT(city.id) as count')
-            ->getQuery()->getSingleScalarResult()
-            ;
     }
 
     private function isCitiesFileNotExists(): bool
