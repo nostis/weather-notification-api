@@ -3,7 +3,7 @@
 API which allows users to subscribe to weather 'newsletter'
 
 Current, functionalities:
-- Account registration, account confirmation, password reset
+- Account registration, account confirmation, user login (by jwt token), password reset - all with exposed REST API
 - Easy to extend notification channel (channel on which user will get notifications) - currently only email
 - Mails queue - ability to store history and delivering asynchronously
 
