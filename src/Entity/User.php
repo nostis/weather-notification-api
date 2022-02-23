@@ -109,6 +109,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private City $city;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ActualWeatherSettings::class)]
+    private $actualWeatherSettings;
+
+    public function __construct()
+    {
+        $this->actualWeatherSettings = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -288,6 +296,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCity(?City $city): self
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ActualWeatherSettings[]
+     */
+    public function getActualWeatherSettings(): Collection
+    {
+        return $this->actualWeatherSettings;
+    }
+
+    public function addActualWeatherSetting(ActualWeatherSettings $actualWeatherSetting): self
+    {
+        if (!$this->actualWeatherSettings->contains($actualWeatherSetting)) {
+            $this->actualWeatherSettings[] = $actualWeatherSetting;
+            $actualWeatherSetting->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActualWeatherSetting(ActualWeatherSettings $actualWeatherSetting): self
+    {
+        if ($this->actualWeatherSettings->removeElement($actualWeatherSetting)) {
+            // set the owning side to null (unless already changed)
+            if ($actualWeatherSetting->getUser() === $this) {
+                $actualWeatherSetting->setUser(null);
+            }
+        }
 
         return $this;
     }
