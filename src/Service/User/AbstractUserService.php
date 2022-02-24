@@ -33,9 +33,12 @@ abstract class AbstractUserService
 
     public static function createUserOutputDto(User $user): UserAccountOutput
     {
+        $userProfile = $user->getUserProfile();
+
         $userOutputDto = new UserAccountOutput();
         $userOutputDto->email = $user->getEmail();
-        $userOutputDto->name = $user->getUserProfile()->getName();
+        $userOutputDto->name = $userProfile->getName();
+        $userOutputDto->city = $userProfile->getCity();
 
         return $userOutputDto;
     }
