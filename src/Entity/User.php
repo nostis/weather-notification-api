@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\Api\ConfirmAccountController;
+use App\Controller\Api\MeController;
 use App\Controller\Api\UserPasswordResetRequestController;
 use App\Controller\Api\UserResetPasswordController;
 use App\Dto\User\UserConfirmAccountInput;
@@ -52,6 +53,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
             'output' => UserAccountOutput::class,
             'receive' => false,
             'controller' => UserResetPasswordController::class
+        ],
+        'me' => [
+            'method' => 'GET',
+            'path' => '/users/me',
+            'output' => UserAccountOutput::class,
+            'controller' => MeController::class,
+            'receive' => false,
+            'security' => "is_granted('ROLE_USER')",
+            'pagination_enabled' => false
         ]
     ],
     itemOperations: [
