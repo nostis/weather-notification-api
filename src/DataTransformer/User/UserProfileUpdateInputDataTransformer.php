@@ -47,6 +47,7 @@ class UserProfileUpdateInputDataTransformer implements DataTransformerInitialize
 
         $userInput = new UserProfileUpdateInput();
         $userInput->name = $existingUser->getUserProfile()->getName();
+        $userInput->city = $existingUser->getUserProfile()->getCity();
 
         return $userInput;
     }
@@ -68,6 +69,7 @@ class UserProfileUpdateInputDataTransformer implements DataTransformerInitialize
         $userProfile = $target->getUserProfile();
 
         $userProfile->setName($input->name);
+        $userProfile->setCity($input->city);
 
         return $target;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Dto\User;
 
+use App\Entity\City;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class UserProfileUpdateInput
@@ -11,4 +12,6 @@ class UserProfileUpdateInput
      * @Assert\Length(max=255)
      */
     public ?string $name = '';
+
+    public ?City $city = null;
 }
