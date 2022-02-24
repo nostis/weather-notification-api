@@ -17,6 +17,10 @@ class UserProfile
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $name;
 
+    #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'userProfiles')]
+    #[ORM\JoinColumn(nullable: false)]
+    private City $city;
+
     #[ORM\OneToOne(inversedBy: 'userProfile', targetEntity: User::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private User $userRelation;
@@ -34,6 +38,18 @@ class UserProfile
     public function setName(?string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }

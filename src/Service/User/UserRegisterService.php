@@ -26,10 +26,9 @@ class UserRegisterService extends AbstractUserService
         $user = new User();
         $user->setEmail($email);
         $user->setPassword($this->getHashedPassword($user, $plainPassword));
-        $user->setCity($city);
         $user->setAccountConfirmationToken($this->getRandomString());
 
-        $userProfile = $this->createUserProfile($user, $name);
+        $userProfile = $this->createUserProfile($user, $name, $city);
         $user->setUserProfile($userProfile);
 
         $emailNotificationChannel = $this->notificationChannelService->createEmailNotificationChannel($user);
@@ -40,11 +39,12 @@ class UserRegisterService extends AbstractUserService
         return $user;
     }
 
-    private function createUserProfile(User $user, string $name): UserProfile
+    private function createUserProfile(User $user, string $name, City $city): UserProfile
     {
         $userProfile = new UserProfile();
         $userProfile->setName($name);
         $userProfile->setUserRelation($user);
+        $userProfile->setCity($city);
 
         return $userProfile;
     }

@@ -45,12 +45,12 @@ class City
     #[Groups(['read'])]
     private string $lng;
 
-    #[ORM\OneToMany(mappedBy: 'city', targetEntity: User::class)]
-    private Collection $users;
+    #[ORM\OneToMany(mappedBy: 'city', targetEntity: UserProfile::class)]
+    private Collection $userProfiles;
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        $this->userProfiles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,29 +95,29 @@ class City
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection|UserProfile[]
      */
-    public function getUsers(): Collection
+    public function getUserProfiles(): Collection
     {
-        return $this->users;
+        return $this->userProfiles;
     }
 
-    public function addUser(User $user): self
+    public function addUserProfile(UserProfile $userProfile): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setCity($this);
+        if (!$this->userProfiles->contains($userProfile)) {
+            $this->userProfiles[] = $userProfile;
+            $userProfile->setCity($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removeUserProfile(UserProfile $userProfile): self
     {
-        if ($this->users->removeElement($user)) {
+        if ($this->userProfiles->removeElement($userProfile)) {
             // set the owning side to null (unless already changed)
-            if ($user->getCity() === $this) {
-                $user->setCity(null);
+            if ($userProfile->getCity() === $this) {
+                $userProfile->setCity(null);
             }
         }
 
