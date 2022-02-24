@@ -5,10 +5,9 @@ namespace App\Controller\Api;
 use App\Entity\User;
 use App\Exception\User\BadPropertyException;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-abstract class AbstractUserController extends AbstractController
+abstract class AbstractUserController extends ExtendedAbstractController
 {
     private EntityManagerInterface $entityManager;
 

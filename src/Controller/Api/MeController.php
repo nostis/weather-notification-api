@@ -4,26 +4,16 @@ namespace App\Controller\Api;
 
 use App\Entity\User;
 use App\Service\User\AbstractUserService;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
-class MeController extends AbstractUserController
+class MeController extends ExtendedAbstractController
 {
     public function __invoke($data)
     {
         /**
-         * @var User | null $user
+         * @var User $user
          */
-        $user = $this->getUser();
-
-        if($this->isUserCurrentlyNotLoggedIn($user)) {
-            throw new AccessDeniedException('User not logged in');
-        }
+        $user = $this->getCheckedUser();
 
         return AbstractUserService::createUserOutputDto($user);
-    }
-
-    private function isUserCurrentlyNotLoggedIn(?User $user)
-    {
-        return $user == null;
     }
 }
